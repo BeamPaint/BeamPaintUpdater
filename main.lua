@@ -1,3 +1,5 @@
+-- SPDX-License-Identifier: MIT
+
 -- local BEAMPAINT_URL = "http://127.0.0.1:3030"
 local BEAMPAINT_URL = "https://cdn.beampaint.com/api/v1"
 
