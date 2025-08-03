@@ -115,7 +115,7 @@ function onInitClient()
     local installedVersion = loadCurrentClientVersion() or { major = 0, minor = 0 }
 
     print("[BeamPaint] Current client version: v" .. installedVersion.major .. "." .. installedVersion.minor)
-    print("[BeamPaint] Checking for updates, selected channel '" .. CHANNEL ..  "'...")
+    print("[BeamPaint] Checking for updates, selected channel '" .. CHANNEL .. "'...")
 
     local success, version = getClientVersion()
     if not success then
