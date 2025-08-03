@@ -1,7 +1,9 @@
 -- SPDX-License-Identifier: MIT
 
 -- local BEAMPAINT_URL = "http://127.0.0.1:3030"
-local BEAMPAINT_URL = "https://cdn.beampaint.com/api/v1"
+local BEAMPAINT_URL = "https://cdn.beampaint.com/api/v2"
+-- either "release" or "testing"
+local CHANNEL = "release"
 
 -- Thanks Bouboule for this function
 function httpRequest(url)
@@ -60,7 +62,7 @@ function loadCurrentServerVersion()
 end
 
 function getClientVersion()
-    local url = BEAMPAINT_URL .. "/version/client"
+    local url = BEAMPAINT_URL .. "/version/" .. CHANNEL .. "/client"
     local resp = httpRequest(url)
     if resp then
         return true, Util.JsonDecode(resp)
@@ -69,7 +71,7 @@ function getClientVersion()
 end
 
 function getServerVersion()
-    local url = BEAMPAINT_URL .. "/version/server"
+    local url = BEAMPAINT_URL .. "/version/" .. CHANNEL .. "/server"
     local resp = httpRequest(url)
     if resp then
         return true, Util.JsonDecode(resp)
@@ -96,16 +98,16 @@ function writeServerVersion(version)
 end
 
 function downloadClientMod()
-    local url = BEAMPAINT_URL .. "/download/client/BeamPaint.zip"
+    local url = BEAMPAINT_URL .. "/download/" .. CHANNEL .. "/client/BeamPaint.zip"
     httpRequestSaveFile(url, "Resources/Client/BeamPaint.zip")
 end
 
 function downloadServerPlugin()
     FS.CreateDirectory("Resources/Server/BeamPaintServerPlugin")
-    local files = httpRequestJson(BEAMPAINT_URL .. "/list/server")
+    local files = httpRequestJson(BEAMPAINT_URL .. "/list/" .. CHANNEL .. "/server")
     for i, file in pairs(files) do
         print(file)
-        httpRequestSaveFile(BEAMPAINT_URL .. "/download/server/" .. file, "Resources/Server/BeamPaintServerPlugin/" .. file)
+        httpRequestSaveFile(BEAMPAINT_URL .. "/download/" .. CHANNEL .. "/server/" .. file, "Resources/Server/BeamPaintServerPlugin/" .. file)
     end
 end
 
@@ -113,7 +115,7 @@ function onInitClient()
     local installedVersion = loadCurrentClientVersion() or { major = 0, minor = 0 }
 
     print("[BeamPaint] Current client version: v" .. installedVersion.major .. "." .. installedVersion.minor)
-    print("[BeamPaint] Checking for updates...")
+    print("[BeamPaint] Checking for updates, selected channel '" .. CHANNEL ..  "'...")
 
     local success, version = getClientVersion()
     if not success then
@@ -121,7 +123,7 @@ function onInitClient()
         print("[BeamPaint] The backend API might be down, aborting...")
         return
     end
-    print("[BeamPaint] Latest client version: v" .. version.major .. "." .. version.minor)
+    print("[BeamPaint] Latest client version: v" .. version.major .. "." .. version.minor .. " (" .. CHANNEL .. ")")
     local needsUpdate = version.major > installedVersion.major
     if version.major == installedVersion.major then
         needsUpdate = version.minor > installedVersion.minor
