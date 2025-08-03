@@ -136,6 +136,7 @@ function onInitClient()
 
     downloadClientMod()
     writeClientVersion(version)
+    print("[BeamPaint] Done! Please restart the server to finalize the update.")
 end
 
 function onInitServer()
@@ -163,13 +164,12 @@ function onInitServer()
 
     downloadServerPlugin()
     writeServerVersion(version)
+    print("[BeamPaint] Done! Please restart the server to finalize the update.")
 end
 
 function onInit()
     onInitClient()
     onInitServer()
-
-    print("[BeamPaint] Done! Please restart the server to finalize the update.")
 end
 
 MP.RegisterEvent("onInit", "onInit")
